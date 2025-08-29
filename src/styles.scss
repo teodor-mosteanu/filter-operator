@@ -1,0 +1,39 @@
+@import './app/styles/company-colors.scss';
+@import 'primeng/resources/themes/soho-light/theme.css';
+@import './app/styles/prime-theme-elements.scss';
+@import 'primeng/resources/primeng.css';
+
+@font-face {
+  font-family: 'Nunito Sans';
+  src: url('./assets/fonts/NunitoSans-VariableFont_YTLC\,opsz\,wdth\,wght.ttf')
+    format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+* {
+  box-sizing: border-box;
+  font-family: 'Nunito Sans';
+}
+
+body {
+  font-family: 'Nunito Sans';
+  margin: 0;
+  padding: 0;
+  background-color: $salsify-light-background-color;
+  color: $salsify-black;
+}
+
+.wrapper,
+.header-wrapper,
+.transaction-wrapper,
+.footer-wrapper {
+  max-width: 1248px;
+  margin: 0 auto;
+  padding-left: 24px;
+  padding-right: 24px;
+}
+.screen-reader-text {
+  position: absolute;
+  left: -9999px;
+}

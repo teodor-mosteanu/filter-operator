@@ -1,0 +1,48 @@
+<form
+  class="filters-form"
+  [formGroup]="filterFormGroup"
+  (ngSubmit)="filterTransactions()"
+>
+  <div class="date-filters">
+    <span>Search dates: </span>
+    <label for="dateFilter" class="screen-reader-text">Date created</label>
+    <p-calendar
+      ariaLabel="Select start date filter"
+      inputId="dateFilter"
+      formControlName="startDate"
+      dateFormat="yy.mm.dd"
+      [showIcon]="true"
+      [maxDate]="filterFormGroup.get('endDate')?.value || today"
+      [showButtonBar]="true"
+    ></p-calendar>
+    <span>TO</span>
+    <label for="dateFilter" class="screen-reader-text">Date created</label>
+    <p-calendar
+      ariaLabel="Select end date filter"
+      inputId="dateFilter"
+      formControlName="endDate"
+      dateFormat="yy.mm.dd"
+      [showIcon]="true"
+      [minDate]="filterFormGroup.get('startDate')?.value || minStartDate"
+      [showButtonBar]="true"
+    ></p-calendar>
+  </div>
+  <div class="status-filter">
+    <p-dropdown
+      ariaLabel="Select a status filter"
+      formControlName="selectedStatus"
+      [options]="paymentStatuses"
+      placeholder="Select a Status"
+      [showClear]="true"
+    >
+      <ng-template let-status pTemplate="item">
+        <div [ngClass]="status.toLowerCase()">
+          {{ status }}
+        </div>
+      </ng-template></p-dropdown
+    >
+  </div>
+  <div class="submit-button">
+    <p-button label="Apply" type="submit"></p-button>
+  </div>
+</form>

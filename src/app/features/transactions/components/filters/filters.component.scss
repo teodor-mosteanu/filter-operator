@@ -1,0 +1,67 @@
+@import '../../../../styles/variables/layout.scss';
+@import '../../../../styles/mixins/layout.scss';
+@import '../../../../styles/mixins/colors.scss';
+
+.filters-form {
+  @include flex-properties;
+  padding: $padding-vertical $padding-horizontal;
+
+  .date-filters {
+    @include flex-properties;
+    align-items: center;
+    flex: 0 0 60%;
+  }
+
+  .status-filter {
+    padding-left: 8%;
+    flex: 0 0 30%;
+
+      div{
+        @include transactionStatusColors;
+      }
+
+  }
+
+  .submit-button {
+    flex: 0 0 10%;
+  }
+}
+
+@media (max-width: 768px) { /* Tablet */
+  .filters-form {
+    @include flex-properties($wrap: wrap);
+
+    .date-filters {
+      flex: $flex-tablet;
+    }
+
+    .status-filter {
+      padding: $padding-vertical $padding-horizontal;
+      flex: 0 0 30%;
+    }
+
+    .submit-button {
+      padding: $padding-vertical $padding-horizontal;
+      flex: $flex-tablet;
+    }
+  }
+}
+
+@media (max-width: 576px) { /* Mobile */
+  .filters-form {
+    @include flex-properties($direction: column);
+
+    .date-filters,
+    .status-filter,
+    .submit-button {
+      align-items: normal;
+      flex-direction: column;
+      padding: $padding-vertical $padding-horizontal;
+      flex: $flex-mobile;
+    }
+
+    .status-filter {
+      padding: 0;
+    }
+  }
+}

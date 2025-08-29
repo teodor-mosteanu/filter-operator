@@ -1,0 +1,15 @@
+<div class="transaction-wrapper">
+  <app-filters (filterChange)="filterTransactions($event)"></app-filters>
+  @if (transactions?.items?.length) {
+    <app-table
+      (pageChange)="changePage($event)"
+      [loading]="loading"
+      [transactions]="transactions"
+      [paymentTransactions]="paymentTransactions"
+      [pageToShow]="currentPage"
+    ></app-table>
+  }
+  @else {
+    <app-placeholder [placeholderContent]="placeholderContent"></app-placeholder>
+  }
+</div>

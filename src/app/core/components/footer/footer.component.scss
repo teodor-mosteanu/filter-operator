@@ -1,0 +1,13 @@
+@import '../../../styles/elements-colors.scss';
+:host {
+  margin-top: auto;
+}
+.footer-container {
+  background-color: $salsify-dark-background-color;
+  width: 100%;
+  .footer-wrapper {
+    background-color: $salsify-dark-background-color;
+    height: 60px;
+    color: $salsify-grey;
+  }
+}

@@ -1,0 +1,141 @@
+{
+  "env": {
+    "browser": true,
+    "es2021": true,
+    "jasmine": true
+  },
+  "extends": "eslint:recommended",
+  "parserOptions": {
+    "ecmaVersion": 12,
+    "sourceType": "module"
+  },
+  "root": true,
+  "ignorePatterns": [],
+  "overrides": [
+    {
+      "files": ["*.ts"],
+      "parserOptions": {
+        "project": ["tsconfig.json"],
+        "createDefaultProgram": true
+      },
+      "extends": [
+        "plugin:@angular-eslint/template/process-inline-templates",
+        "prettier"
+      ],
+      "plugins": [
+        "eslint-plugin-react",
+        "unused-imports",
+        "@angular-eslint",
+        "@typescript-eslint"
+      ],
+      "rules": {
+        "@angular-eslint/component-selector": [
+          "error",
+          {
+            "type": "element",
+            "prefix": "app",
+            "style": "kebab-case"
+          }
+        ],
+        "@angular-eslint/directive-selector": [
+          "error",
+          {
+            "type": "attribute",
+            "prefix": "app",
+            "style": "camelCase"
+          }
+        ],
+        "@typescript-eslint/explicit-member-accessibility": [
+          "off",
+          {
+            "accessibility": "explicit"
+          }
+        ],
+        "@typescript-eslint/member-delimiter-style": [
+          "off",
+          {
+            "multiline": {
+              "delimiter": "none",
+              "requireLast": true
+            },
+            "singleline": {
+              "delimiter": "semi",
+              "requireLast": false
+            }
+          }
+        ],
+        "@typescript-eslint/no-use-before-define": "error",
+        "@typescript-eslint/semi": ["off", null],
+        "@typescript-eslint/type-annotation-spacing": "off",
+        "@typescript-eslint/naming-convention": [
+          "error",
+          {
+            "selector": ["variable", "function"],
+            "format": ["camelCase", "UPPER_CASE"],
+            "leadingUnderscore": "allowSingleOrDouble"
+          },
+          {
+            "selector": ["variable"],
+            "modifiers": ["readonly"],
+            "format": ["UPPER_CASE"]
+          }
+        ],
+        "no-console": "error",
+        "@typescript-eslint/no-shadow": ["error"],
+        "arrow-parens": ["off", "always"],
+        "brace-style": ["off", "off"],
+        "eol-last": "off",
+        "import/order": "off",
+        "linebreak-style": "off",
+        "max-len": "off",
+        "new-parens": "off",
+        "newline-per-chained-call": "off",
+        "no-extra-semi": "off",
+        "no-irregular-whitespace": "off",
+        "no-trailing-spaces": "off",
+        "react/jsx-curly-spacing": "off",
+        "react/jsx-equals-spacing": "off",
+        "react/jsx-wrap-multilines": "off",
+        "space-before-function-paren": "off",
+        "space-in-parens": ["off", "never"],
+        "no-shadow": "off",
+        "no-underscore-dangle": "off",
+        "unused-imports/no-unused-imports": "error",
+        "no-restricted-globals": [
+          "error",
+          {
+            "name": "fdescribe",
+            "message": "Please do not commit fdescribe, use describe instead."
+          },
+          {
+            "name": "fit",
+            "message": "Please do not commit fit, use it instead."
+          }
+        ],
+        "curly": "warn"
+      }
+    },
+    {
+      "files": ["*.html"],
+      "extends": [
+        "plugin:@angular-eslint/template/recommended",
+        "prettier",
+        "eslint-config-prettier"
+      ],
+      "rules": {}
+    },
+    {
+      "files": ["*.js"],
+      "parserOptions": {
+        "ecmaVersion": 8
+      }
+    },
+    {
+      "files": ["*.mjs"],
+      "parserOptions": {
+        "sourceType": "module",
+        "ecmaVersion": 6
+      }
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+@import '../../../styles/elements-colors.scss';
+
+.header-container {
+  background-color: $salsify-dark-background-color;
+
+  .header {
+    color: $salsify-black;
+    display: flex;
+    justify-content: space-between;
+    padding: 1rem;
+    width: 100%;
+    a {
+      display: flex;
+      margin-right: 24px;
+      margin-bottom: 8px;
+    }
+    .logo {
+      max-width: 150rem;
+    }
+  }
+}

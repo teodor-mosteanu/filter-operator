@@ -1,0 +1,10 @@
+@import 'elements-colors.scss';
+
+.p-button {
+  background-color: $salsify-button-color;
+  color: $salsify-light-background-color;
+  border: none;
+  &:hover {
+    background-color: $salsify-button-color-hover;
+  }
+}
