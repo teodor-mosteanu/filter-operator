@@ -1,5 +1,5 @@
 /* app title [TM 20/03/24] */
-export const appTitle = 'Salsify | Operator Filter';
+export const appTitle = 'Salsify | Operator Product Filter';
 
 /* api auth details [TM 19/03/24] */
 export const apiUsername = 'user';
@@ -27,13 +27,13 @@ export const PLACEHOLDER_CONTENT = {
     message:
       'Begin by creating a filter to view transactions. Click apply with empty filters to get all data.',
   },
-  NO_TRANSACTIONS: {
-    title: 'No transactions found',
-    message: 'No transactions found with the selected filter',
+  NO_PRODUCTS: {
+    title: 'No products found',
+    message: 'No products found with the selected filter',
   },
   ERROR: {
     title: 'An error occurred',
     message:
-      'An error occurred while fetching transactions. Please try again later.',
+      'An error occurred while fetching products. Please try again later.',
   },
 };

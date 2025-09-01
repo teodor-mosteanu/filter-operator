@@ -1,48 +1,76 @@
 <form
   class="filters-form"
   [formGroup]="filterFormGroup"
-  (ngSubmit)="filterTransactions()"
+  (ngSubmit)="filterProducts()"
 >
-  <div class="date-filters">
-    <span>Search dates: </span>
-    <label for="dateFilter" class="screen-reader-text">Date created</label>
-    <p-calendar
-      ariaLabel="Select start date filter"
-      inputId="dateFilter"
-      formControlName="startDate"
-      dateFormat="yy.mm.dd"
-      [showIcon]="true"
-      [maxDate]="filterFormGroup.get('endDate')?.value || today"
-      [showButtonBar]="true"
-    ></p-calendar>
-    <span>TO</span>
-    <label for="dateFilter" class="screen-reader-text">Date created</label>
-    <p-calendar
-      ariaLabel="Select end date filter"
-      inputId="dateFilter"
-      formControlName="endDate"
-      dateFormat="yy.mm.dd"
-      [showIcon]="true"
-      [minDate]="filterFormGroup.get('startDate')?.value || minStartDate"
-      [showButtonBar]="true"
-    ></p-calendar>
-  </div>
-  <div class="status-filter">
+  <div class="filter-section filter-property">
     <p-dropdown
-      ariaLabel="Select a status filter"
-      formControlName="selectedStatus"
-      [options]="paymentStatuses"
-      placeholder="Select a Status"
+      formControlName="property"
+      [options]="properties"
+      optionLabel="name"
+      placeholder="Select Property"
       [showClear]="true"
-    >
-      <ng-template let-status pTemplate="item">
-        <div [ngClass]="status.toLowerCase()">
-          {{ status }}
-        </div>
-      </ng-template></p-dropdown
-    >
+    ></p-dropdown>
   </div>
-  <div class="submit-button">
+  <div class="filter-section filter-operator">
+    <p-dropdown
+      formControlName="operator"
+      [options]="
+        filteredOperators.length > 0
+          ? filteredOperators
+          : [{ id: '', text: 'Please select a property to begin' }]
+      "
+      optionLabel="text"
+      [disabled]="filteredOperators.length === 0"
+      placeholder="Select Operator"
+      [showClear]="true"
+    ></p-dropdown>
+  </div>
+  <div class="filter-section filter-value">
+    <ng-container
+      *ngIf="
+        filterFormGroup.get('property')?.value as selectedProperty;
+        else valuePlaceholder
+      "
+    >
+      <ng-container [ngSwitch]="selectedProperty.type">
+        <p-dropdown
+          *ngSwitchCase="'enumerated'"
+          formControlName="value"
+          [options]="valueOptions"
+          placeholder="Select Value"
+          [showClear]="true"
+        ></p-dropdown>
+        <input
+          *ngSwitchCase="'string'"
+          type="text"
+          formControlName="value"
+          placeholder="Enter value"
+        />
+        <input
+          *ngSwitchCase="'number'"
+          type="number"
+          formControlName="value"
+          placeholder="Enter value"
+        />
+      </ng-container>
+    </ng-container>
+    <ng-template #valuePlaceholder>
+      <div
+        class="value-placeholder"
+        style="height: 40px; display: flex; align-items: center; color: #888"
+      >
+        Please select a property and operator to enter a value
+      </div>
+    </ng-template>
+  </div>
+  <div class="filter-section filter-submit">
     <p-button label="Apply" type="submit"></p-button>
+    <p-button
+      label="Clear Filter"
+      type="button"
+      (click)="clearFilters()"
+      [style.marginLeft]="'1rem'"
+    ></p-button>
   </div>
 </form>

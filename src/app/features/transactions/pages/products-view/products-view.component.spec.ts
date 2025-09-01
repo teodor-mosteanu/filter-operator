@@ -41,9 +41,9 @@ describe('TransactionViewComponent', () => {
   });
 
   it('should set placeholder content', () => {
-    component.setPlaceholderContent(PLACEHOLDER_CONTENT.NO_TRANSACTIONS);
+    component.setPlaceholderContent(PLACEHOLDER_CONTENT.NO_PRODUCTS);
     expect(component.placeholderContent).toEqual(
-      PLACEHOLDER_CONTENT.NO_TRANSACTIONS,
+      PLACEHOLDER_CONTENT.NO_PRODUCTS,
     );
   });
 

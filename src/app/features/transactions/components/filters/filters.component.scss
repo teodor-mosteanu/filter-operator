@@ -2,32 +2,37 @@
 @import '../../../../styles/mixins/layout.scss';
 @import '../../../../styles/mixins/colors.scss';
 
+// ...existing code...
 .filters-form {
   @include flex-properties;
   padding: $padding-vertical $padding-horizontal;
 
-  .date-filters {
+  .filter-section {
     @include flex-properties;
     align-items: center;
-    flex: 0 0 60%;
+    margin-bottom: 1rem;
   }
 
-  .status-filter {
-    padding-left: 8%;
-    flex: 0 0 30%;
-
-      div{
-        @include transactionStatusColors;
-      }
-
+  .filter-property {
+    flex: 0 0 25%;
   }
 
-  .submit-button {
-    flex: 0 0 10%;
+  .filter-operator {
+    flex: 0 0 25%;
+  }
+
+  .filter-value {
+    flex: 0 0 25%;
+  }
+
+  .filter-submit {
+    flex: 0 0 25%;
+    justify-content: flex-end;
   }
 }
 
-@media (max-width: 768px) { /* Tablet */
+@media (max-width: 768px) {
+  /* Tablet */
   .filters-form {
     @include flex-properties($wrap: wrap);
 
@@ -47,7 +52,8 @@
   }
 }
 
-@media (max-width: 576px) { /* Mobile */
+@media (max-width: 576px) {
+  /* Mobile */
   .filters-form {
     @include flex-properties($direction: column);
 

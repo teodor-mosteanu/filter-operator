@@ -1,17 +1,15 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { TableModule } from 'primeng/table';
-import {
-  PaymentStatus,
-  PLACEHOLDER_CONTENT,
-} from '../../../../core/constants/app.constants';
-import {
-  PaginatedTransactions,
-  PaymentTransaction,
-} from '../../../../core/interfaces/payment-transaction';
+import { PLACEHOLDER_CONTENT } from '../../../../core/constants/app.constants';
+import { OPERATOR_IDS } from '../../../../core/constants/operator.constants';
+import { OPERATORS } from '../../../../core/constants/operators';
+import { Product } from '../../interfaces/products.interface';
+import { Property } from '../../interfaces/properties.interface';
+import { Operator } from '../../interfaces/filter.interface';
 import { FiltersComponent } from '../../components/filters/filters.component';
 import { TableComponent } from '../../components/table/table.component';
-import { TransactionsService } from '../../services/transactions.service';
+import { DatastoreService } from '../../services/products.service';
 import { PlaceholderComponent } from '../../components/placeholder/placeholder.component';
 import { catchError, Observable, of } from 'rxjs';
 
@@ -29,19 +27,17 @@ import { catchError, Observable, of } from 'rxjs';
   styleUrl: './products-view.component.scss',
 })
 export class ProductsViewComponent {
-  transactions: PaginatedTransactions | undefined = undefined;
-  paymentTransactions: PaymentTransaction[];
-
+  allProducts: Product[] = [];
+  products: Product[] = [];
+  properties: Property[] = [];
+  operators: Operator[] = OPERATORS;
   loading = false;
-  currentPage = 0;
-
-  createdDateAtStart: string | undefined = undefined;
-  createdDateAtEnd: string | undefined = undefined;
-  filterStatus: PaymentStatus | undefined = undefined;
-
   placeholderContent = PLACEHOLDER_CONTENT.NO_FILTER;
 
-  constructor(private transactionsService: TransactionsService) {}
+  constructor(private productsService: DatastoreService) {
+    this.loadAllProducts();
+    this.loadProperties();
+  }
 
   setLoadingState(isLoading: boolean): void {
     this.loading = isLoading;
@@ -53,46 +49,87 @@ export class ProductsViewComponent {
     this.placeholderContent = content;
   }
 
-  getTransactions(): void {
+  loadAllProducts(): void {
     this.setLoadingState(true);
-    this.transactionsService
-      .getFilteredTransactions(
-        this.currentPage,
-        this.createdDateAtStart,
-        this.createdDateAtEnd,
-        this.filterStatus,
-      )
+    this.productsService
+      .getProducts()
       .pipe(catchError(() => this.handleError()))
-      .subscribe(data => this.handleData(data));
+      .subscribe((data: Product[] | null) => {
+        this.allProducts = data || [];
+        this.products = [...this.allProducts];
+        this.setLoadingState(false);
+        if (this.products.length === 0) {
+          this.setPlaceholderContent(PLACEHOLDER_CONTENT.NO_PRODUCTS);
+        }
+      });
   }
 
-  private handleData(data: PaginatedTransactions | null): void {
-    this.setLoadingState(false);
-    if (data) {
-      this.transactions = data;
-      this.paymentTransactions = data.items;
-      if (data.items.length === 0) {
-        this.setPlaceholderContent(PLACEHOLDER_CONTENT.NO_TRANSACTIONS);
-      }
+  loadProperties(): void {
+    this.productsService
+      .getProperties()
+      .pipe(catchError(() => this.handleError()))
+      .subscribe((data: Property[] | null) => {
+        this.properties = data || [];
+      });
+  }
+
+  onFilterChange(filter: {
+    property: Property;
+    operator: Operator;
+    value: any;
+  }): void {
+    if (!filter.property || !filter.operator) {
+      this.products = [...this.allProducts];
+      return;
     }
+    this.products = this.allProducts.filter(product => {
+      const propValue = product.property_values.find(
+        pv => pv.property_id === filter.property.id,
+      )?.value;
+      switch (filter.operator.id) {
+        case OPERATOR_IDS.EQUALS:
+          return propValue == filter.value;
+        case OPERATOR_IDS.GREATER_THAN:
+          return typeof propValue === 'number' && propValue > filter.value;
+        case OPERATOR_IDS.LESS_THAN:
+          return typeof propValue === 'number' && propValue < filter.value;
+        case OPERATOR_IDS.ANY:
+          return (
+            propValue !== undefined && propValue !== null && propValue !== ''
+          );
+        case OPERATOR_IDS.NONE:
+          return (
+            propValue === undefined || propValue === null || propValue === ''
+          );
+        case OPERATOR_IDS.IN:
+          if (Array.isArray(filter.value)) {
+            return filter.value.includes(propValue);
+          }
+          return (
+            typeof filter.value === 'string' &&
+            filter.value
+              .split(',')
+              .map(v => v.trim())
+              .includes(String(propValue))
+          );
+        case OPERATOR_IDS.CONTAINS:
+          return (
+            typeof propValue === 'string' &&
+            propValue.toLowerCase().includes(String(filter.value).toLowerCase())
+          );
+        default:
+          return true;
+      }
+    });
+  }
+
+  clearFilter(): void {
+    this.products = [...this.allProducts];
   }
 
   private handleError(): Observable<null> {
     this.setLoadingState(false);
     this.setPlaceholderContent(PLACEHOLDER_CONTENT.ERROR);
     return of(null);
-  }
-
-  filterTransactions(filters): void {
-    this.createdDateAtStart = filters.startDate?.toISOString().split('T')[0];
-    this.createdDateAtEnd = filters.endDate?.toISOString().split('T')[0];
-    this.filterStatus = filters.selectedStatus;
-    this.currentPage = 0;
-    this.getTransactions();
-  }
-
-  changePage(page: number): void {
-    this.currentPage = page;
-    this.getTransactions();
   }
 }

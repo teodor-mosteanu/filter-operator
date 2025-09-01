@@ -1,11 +1,8 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { TableLazyLoadEvent, TableModule } from 'primeng/table';
-import {
-  PaginatedTransactions,
-  PaymentTransaction,
-} from '../../../../core/interfaces/payment-transaction';
+import { Property } from '../../interfaces/properties.interface';
+import { Component, Input } from '@angular/core';
+import { TableModule } from 'primeng/table';
+import { Product } from '../../interfaces/products.interface';
 import { CommonModule } from '@angular/common';
-import { defaultPageSize } from '../../../../core/constants/app.constants';
 
 @Component({
   selector: 'app-table',
@@ -16,27 +13,17 @@ import { defaultPageSize } from '../../../../core/constants/app.constants';
 })
 export class TableComponent {
   @Input() loading: boolean;
-  @Input() transactions: PaginatedTransactions | undefined = undefined;
-  @Input() paymentTransactions: PaymentTransaction[];
-  private _pageToShow: number;
-  @Input()
-  set pageToShow(value: number) {
-    this._pageToShow = value * defaultPageSize;
-  }
+  @Input() products: Product[] = [];
+  @Input() properties: Property[] = [];
 
-  get pageToShow(): number {
-    return this._pageToShow;
-  }
-  @Output() pageChange = new EventEmitter<number>();
-  currentPage = 0;
-
-  changePage(event: TableLazyLoadEvent) {
-    const first = event.first ?? 0;
-    const rows = event.rows ?? 1;
-    const page = first === 0 ? 0 : first / rows;
-    if (page !== this.currentPage) {
-      this.currentPage = page;
-      this.pageChange.emit(this.currentPage);
-    }
+  // Get the value of a specific property for a given product - if not found, return a default value
+  getPropertyValue(
+    product: Product,
+    propertyId: number,
+  ): string | number | undefined {
+    const prop = product.property_values.find(
+      pv => pv.property_id === propertyId,
+    );
+    return prop ? prop.value : '';
   }
 }

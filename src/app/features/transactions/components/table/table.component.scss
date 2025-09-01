@@ -7,11 +7,6 @@ td::selection {
   color: $salsify-light-background-color;
 }
 
-/* Paginator buttons [TM 25/03/24] */
-.p-paginator-pages .p-link:not(.p-highlight) {
-  color: $salsify-paragraph-text-color;
-}
-
 td {
   @include transactionStatusColors;
 }

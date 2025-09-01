@@ -1,15 +1,25 @@
-<div class="transaction-wrapper">
-  <app-filters (filterChange)="filterTransactions($event)"></app-filters>
-  @if (transactions?.items?.length) {
+<div class="products-wrapper">
+  <app-filters
+    [properties]="properties"
+    [operators]="operators"
+    (filterChange)="onFilterChange($event)"
+  ></app-filters>
+  @if (loading) {
+    <app-placeholder
+      [placeholderContent]="{
+        title: 'Loading',
+        message: 'Loading products, please wait...'
+      }"
+    />
+  } @else if (products.length) {
     <app-table
-      (pageChange)="changePage($event)"
       [loading]="loading"
-      [transactions]="transactions"
-      [paymentTransactions]="paymentTransactions"
-      [pageToShow]="currentPage"
+      [products]="products"
+      [properties]="properties"
     ></app-table>
-  }
-  @else {
-    <app-placeholder [placeholderContent]="placeholderContent"></app-placeholder>
+  } @else {
+    <app-placeholder
+      [placeholderContent]="placeholderContent"
+    ></app-placeholder>
   }
 </div>
