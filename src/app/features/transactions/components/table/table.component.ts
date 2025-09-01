@@ -12,7 +12,6 @@ import { CommonModule } from '@angular/common';
   styleUrl: './table.component.scss',
 })
 export class TableComponent {
-  @Input() loading: boolean;
   @Input() products: Product[] = [];
   @Input() properties: Property[] = [];
 

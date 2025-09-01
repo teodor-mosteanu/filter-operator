@@ -22,6 +22,14 @@ import { CommonModule } from '@angular/common';
   styleUrl: './filters.component.scss',
 })
 export class FiltersComponent {
+  public OPERATOR_IDS = OPERATOR_IDS;
+  get selectedProperty() {
+    return this.filterFormGroup.get('property')?.value;
+  }
+
+  get selectedOperator() {
+    return this.filterFormGroup.get('operator')?.value;
+  }
   @Input() properties: Property[] = [];
   @Input() operators: Operator[] = [];
   @Output() filterChange = new EventEmitter<any>();

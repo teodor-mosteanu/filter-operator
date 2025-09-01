@@ -12,6 +12,7 @@ import { TableComponent } from '../../components/table/table.component';
 import { DatastoreService } from '../../services/products.service';
 import { PlaceholderComponent } from '../../components/placeholder/placeholder.component';
 import { catchError, Observable, of } from 'rxjs';
+import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-products-view',
@@ -32,45 +33,41 @@ export class ProductsViewComponent {
   properties: Property[] = [];
   operators: Operator[] = OPERATORS;
   loading = false;
-  placeholderContent = PLACEHOLDER_CONTENT.NO_FILTER;
+  placeholderContent = PLACEHOLDER_CONTENT.NO_PRODUCTS;
 
   constructor(private productsService: DatastoreService) {
-    this.loadAllProducts();
-    this.loadProperties();
+    this.loadData();
+  }
+
+  loadData(): void {
+    this.setLoadingState(true);
+    forkJoin({
+      products: this.productsService
+        .getProducts()
+        .pipe(catchError(() => this.handleError())),
+      properties: this.productsService
+        .getProperties()
+        .pipe(catchError(() => this.handleError())),
+    }).subscribe(({ products, properties }) => {
+      this.allProducts = products || [];
+      this.products = [...this.allProducts];
+      this.properties = properties || [];
+      this.setLoadingState(false);
+      if (this.products.length === 0) {
+        this.setPlaceholderContent(PLACEHOLDER_CONTENT.NO_PRODUCTS);
+      }
+    });
   }
 
   setLoadingState(isLoading: boolean): void {
     this.loading = isLoading;
+    this.setPlaceholderContent(PLACEHOLDER_CONTENT.LOADING);
   }
 
   setPlaceholderContent(
     content: (typeof PLACEHOLDER_CONTENT)[keyof typeof PLACEHOLDER_CONTENT],
   ): void {
     this.placeholderContent = content;
-  }
-
-  loadAllProducts(): void {
-    this.setLoadingState(true);
-    this.productsService
-      .getProducts()
-      .pipe(catchError(() => this.handleError()))
-      .subscribe((data: Product[] | null) => {
-        this.allProducts = data || [];
-        this.products = [...this.allProducts];
-        this.setLoadingState(false);
-        if (this.products.length === 0) {
-          this.setPlaceholderContent(PLACEHOLDER_CONTENT.NO_PRODUCTS);
-        }
-      });
-  }
-
-  loadProperties(): void {
-    this.productsService
-      .getProperties()
-      .pipe(catchError(() => this.handleError()))
-      .subscribe((data: Property[] | null) => {
-        this.properties = data || [];
-      });
   }
 
   onFilterChange(filter: {

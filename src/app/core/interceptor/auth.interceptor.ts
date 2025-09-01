@@ -5,6 +5,11 @@ import {
   transationApiUrl,
 } from '../constants/app.constants';
 
+/*
+ * NOTE: This interceptor is not used in the application.
+ * It is included for demonstration purposes only to show how authentication could be implemented.
+ * [TM 01/09/25]
+ */
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const authToken = 'Basic ' + btoa(apiUsername + ':' + apiPassword);
 

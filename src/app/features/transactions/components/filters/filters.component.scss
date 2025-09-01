@@ -2,7 +2,17 @@
 @import '../../../../styles/mixins/layout.scss';
 @import '../../../../styles/mixins/colors.scss';
 
-// ...existing code...
+.value-placeholder {
+  height: 40px;
+  display: flex;
+  align-items: center;
+  // color: $text-muted;
+}
+
+.ml-1rem {
+  margin-left: 1rem;
+}
+
 .filters-form {
   @include flex-properties;
   padding: $padding-vertical $padding-horizontal;

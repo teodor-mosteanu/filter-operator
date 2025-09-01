@@ -24,7 +24,7 @@ describe('authInterceptor', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({});
     mockHandler = {
-      handle: (req: HttpRequest<any>) => {
+      handle: () => {
         return of(new HttpResponse());
       },
     };

@@ -29,7 +29,10 @@
   <div class="filter-section filter-value">
     <ng-container
       *ngIf="
-        filterFormGroup.get('property')?.value as selectedProperty;
+        selectedProperty &&
+          selectedOperator &&
+          selectedOperator.id !== OPERATOR_IDS.ANY &&
+          selectedOperator.id !== OPERATOR_IDS.NONE;
         else valuePlaceholder
       "
     >
@@ -56,10 +59,7 @@
       </ng-container>
     </ng-container>
     <ng-template #valuePlaceholder>
-      <div
-        class="value-placeholder"
-        style="height: 40px; display: flex; align-items: center; color: #888"
-      >
+      <div class="value-placeholder">
         Please select a property and operator to enter a value
       </div>
     </ng-template>
@@ -70,7 +70,7 @@
       label="Clear Filter"
       type="button"
       (click)="clearFilters()"
-      [style.marginLeft]="'1rem'"
+      class="ml-1rem"
     ></p-button>
   </div>
 </form>

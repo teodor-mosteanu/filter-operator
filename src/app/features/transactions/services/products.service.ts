@@ -12,12 +12,12 @@ export class DatastoreService {
   constructor() {}
 
   getProducts(): Observable<Product[]> {
-    // Simulate backend call
-    return of(datastore.products).pipe(delay(5000));
+    // Simulate backend call with a delay
+    return of(datastore.products).pipe(delay(4000));
   }
 
   getProperties(): Observable<Property[]> {
-    // Simulate backend call
-    return of(datastore.properties);
+    // Simulate backend call with a delay
+    return of(datastore.properties).pipe(delay(5000));
   }
 }
