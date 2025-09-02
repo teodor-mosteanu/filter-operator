@@ -8,6 +8,11 @@ import { MultiSelectModule } from 'primeng/multiselect';
 import { CalendarModule } from 'primeng/calendar';
 import { DropdownModule } from 'primeng/dropdown';
 import { CommonModule } from '@angular/common';
+import {
+  numberInOperatorValidator,
+  enumeratedInOperatorValidator,
+  requiredValueValidator,
+} from '../../utils/filter-angular-validators';
 
 @Component({
   selector: 'app-filters',
@@ -24,6 +29,38 @@ import { CommonModule } from '@angular/common';
   styleUrl: './filters.component.scss',
 })
 export class FiltersComponent {
+  ngOnInit() {
+    this.filterFormGroup.get('property')?.valueChanges.subscribe(() => {
+      this.updateValueValidators();
+    });
+    this.filterFormGroup.get('operator')?.valueChanges.subscribe(() => {
+      this.updateValueValidators();
+    });
+  }
+
+  updateValueValidators() {
+    const property = this.filterFormGroup.get('property')?.value;
+    const operator = this.filterFormGroup.get('operator')?.value;
+    const valueControl = this.filterFormGroup.get('value');
+    if (!property || !operator) {
+      valueControl?.clearValidators();
+      valueControl?.updateValueAndValidity();
+      return;
+    }
+    if (property.type === 'number' && operator.id === this.OPERATOR_IDS.IN) {
+      valueControl?.setValidators(numberInOperatorValidator());
+    } else if (
+      property.type === 'enumerated' &&
+      operator.id === this.OPERATOR_IDS.IN
+    ) {
+      valueControl?.setValidators(enumeratedInOperatorValidator());
+    } else {
+      valueControl?.setValidators(
+        requiredValueValidator(operator.id, this.OPERATOR_IDS),
+      );
+    }
+    valueControl?.updateValueAndValidity();
+  }
   showValueError = false;
   valueErrorMessage = '';
   public OPERATOR_IDS = OPERATOR_IDS;
@@ -96,71 +133,31 @@ export class FiltersComponent {
   }
 
   filterProducts() {
-    const { property, operator, value } = this.filterFormGroup.value;
     this.showValueError = false;
     this.valueErrorMessage = '';
-
-    // Validation for 'Is any of' operator on number property
+    const valueControl = this.filterFormGroup.get('value');
+    if (valueControl?.invalid) {
+      const errors = valueControl.errors || {};
+      this.showValueError = true;
+      this.valueErrorMessage = Object.values(errors)[0] as string;
+      return;
+    }
+    // For number IN operator, parse value to array of numbers
+    const property = this.filterFormGroup.get('property')?.value;
+    const operator = this.filterFormGroup.get('operator')?.value;
+    let value = valueControl?.value;
     if (
       property &&
       property.type === 'number' &&
       operator &&
-      operator.id === OPERATOR_IDS.IN
+      operator.id === this.OPERATOR_IDS.IN
     ) {
-      // Accept comma-separated numbers
-      if (!value || typeof value !== 'string') {
-        this.showValueError = true;
-        this.valueErrorMessage =
-          'Please enter one or more numbers separated by commas.';
-        return;
-      }
-      const values = value.split(',').map(v => v.trim());
-      if (
-        values.length === 0 ||
-        values.some(v => v === '' || isNaN(Number(v)))
-      ) {
-        this.showValueError = true;
-        this.valueErrorMessage =
-          'Only numbers separated by commas are allowed.';
-        return;
-      }
-      // Pass array of numbers to filter
-      this.filterChange.emit({
-        ...this.filterFormGroup.value,
-        value: values.map(Number),
-      });
-      return;
+      value = value.split(',').map((v: string) => Number(v.trim()));
     }
-
-    // Validation for 'Is any of' operator on enumerated property (multi-select)
-    if (
-      property &&
-      property.type === 'enumerated' &&
-      operator &&
-      operator.id === OPERATOR_IDS.IN
-    ) {
-      if (!value || !Array.isArray(value) || value.length === 0) {
-        this.showValueError = true;
-        this.valueErrorMessage = 'Please select one or more values.';
-        return;
-      }
-      // Pass array of selected values to filter
-      this.filterChange.emit({ ...this.filterFormGroup.value, value });
-      return;
-    }
-
-    // General required value check
-    if (
-      operator &&
-      operator.id !== OPERATOR_IDS.ANY &&
-      operator.id !== OPERATOR_IDS.NONE &&
-      !value
-    ) {
-      this.showValueError = true;
-      this.valueErrorMessage = 'Value is required.';
-      return;
-    }
-    this.filterChange.emit(this.filterFormGroup.value);
+    this.filterChange.emit({
+      ...this.filterFormGroup.value,
+      value,
+    });
   }
 
   clearFilters() {
