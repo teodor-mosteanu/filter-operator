@@ -1,4 +1,5 @@
 import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
+import { OPERATOR_IDS } from '../../../core/constants/operator.constants';
 
 export function numberInOperatorValidator(): ValidatorFn {
   return (control: AbstractControl): ValidationErrors | null => {
@@ -29,10 +30,7 @@ export function enumeratedInOperatorValidator(): ValidatorFn {
   };
 }
 
-export function requiredValueValidator(
-  operatorId: string,
-  OPERATOR_IDS: any,
-): ValidatorFn {
+export function requiredValueValidator(operatorId: string): ValidatorFn {
   return (control: AbstractControl): ValidationErrors | null => {
     const value = control.value;
     if (

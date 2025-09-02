@@ -98,42 +98,63 @@ export class ProductsViewComponent {
     this.placeholderContent = content;
   }
 
+  /**
+   * Updates the displayed products based on the selected filter.
+   *
+   * @param filter - The filter object containing property, operator, and value.
+   *
+   * If no property or operator is selected, resets the product list to all products.
+   * Otherwise, filters products by matching the selected property value against the filter value
+   * using the chosen operator (equals, greater than, less than, any, none, in, contains).
+   * Updates the placeholder message if no products match the filter.
+   */
   onFilterChange(filter: {
     property: Property;
     operator: Operator;
     value: any;
   }): void {
     if (!filter.property || !filter.operator) {
-      //
       this.products = [...this.allProducts];
       this.setPlaceholderContent(PLACEHOLDER_CONTENT.NO_PRODUCTS);
       return;
     }
-    this.products = this.allProducts.filter(product => {
-      const propValue = product.property_values.find(
-        pv => pv.property_id === filter.property.id,
-      )?.value;
-      switch (filter.operator.id) {
-        case OPERATOR_IDS.EQUALS:
-          return matchEquals(propValue, filter.value);
-        case OPERATOR_IDS.GREATER_THAN:
-          return matchGreaterThan(propValue, filter.value);
-        case OPERATOR_IDS.LESS_THAN:
-          return matchLessThan(propValue, filter.value);
-        case OPERATOR_IDS.ANY:
-          return matchAny(propValue);
-        case OPERATOR_IDS.NONE:
-          return matchNone(propValue);
-        case OPERATOR_IDS.IN:
-          return matchIn(propValue, filter.value, filter.property.type);
-        case OPERATOR_IDS.CONTAINS:
-          return matchContains(propValue, filter.value);
-        default:
-          return true;
-      }
-    });
+    this.products = this.allProducts.filter(product =>
+      this.matchesFilter(product, filter),
+    );
     if (this.products.length === 0) {
       this.setPlaceholderContent(PLACEHOLDER_CONTENT.NO_PRODUCTS);
+    }
+  }
+
+  /**
+   * Determines if a product matches the given filter.
+   * @param product - The product to check.
+   * @param filter - The filter criteria.
+   */
+  private matchesFilter(
+    product: Product,
+    filter: { property: Property; operator: Operator; value: any },
+  ): boolean {
+    const propValue = product.property_values.find(
+      pv => pv.property_id === filter.property.id,
+    )?.value;
+    switch (filter.operator.id) {
+      case OPERATOR_IDS.EQUALS:
+        return matchEquals(propValue, filter.value);
+      case OPERATOR_IDS.GREATER_THAN:
+        return matchGreaterThan(propValue, filter.value);
+      case OPERATOR_IDS.LESS_THAN:
+        return matchLessThan(propValue, filter.value);
+      case OPERATOR_IDS.ANY:
+        return matchAny(propValue);
+      case OPERATOR_IDS.NONE:
+        return matchNone(propValue);
+      case OPERATOR_IDS.IN:
+        return matchIn(propValue, filter.value, filter.property.type);
+      case OPERATOR_IDS.CONTAINS:
+        return matchContains(propValue, filter.value);
+      default:
+        return true;
     }
   }
 

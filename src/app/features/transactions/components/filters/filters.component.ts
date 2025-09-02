@@ -13,7 +13,7 @@ import {
   numberInOperatorValidator,
   enumeratedInOperatorValidator,
   requiredValueValidator,
-} from '../../utils/filter-angular-validators';
+} from '../../utils/filter-validators';
 
 @Component({
   selector: 'app-filters',
@@ -30,49 +30,11 @@ import {
   styleUrl: './filters.component.scss',
 })
 export class FiltersComponent {
-  ngOnInit() {
-    this.filterFormGroup.get('property')?.valueChanges.subscribe(() => {
-      this.updateValueValidators();
-    });
-    this.filterFormGroup.get('operator')?.valueChanges.subscribe(() => {
-      this.updateValueValidators();
-    });
-  }
-
-  updateValueValidators() {
-    const property = this.filterFormGroup.get('property')?.value;
-    const operator = this.filterFormGroup.get('operator')?.value;
-    const valueControl = this.filterFormGroup.get('value');
-    if (!property || !operator) {
-      valueControl?.clearValidators();
-      valueControl?.updateValueAndValidity();
-      return;
-    }
-    if (property.type === 'number' && operator.id === this.OPERATOR_IDS.IN) {
-      valueControl?.setValidators(numberInOperatorValidator());
-    } else if (
-      property.type === 'enumerated' &&
-      operator.id === this.OPERATOR_IDS.IN
-    ) {
-      valueControl?.setValidators(enumeratedInOperatorValidator());
-    } else {
-      valueControl?.setValidators(
-        requiredValueValidator(operator.id, this.OPERATOR_IDS),
-      );
-    }
-    valueControl?.updateValueAndValidity();
-  }
   showValueError = false;
   valueErrorMessage = '';
   private submitted = false;
   public OPERATOR_IDS = OPERATOR_IDS;
-  get selectedProperty() {
-    return this.filterFormGroup.get('property')?.value;
-  }
 
-  get selectedOperator() {
-    return this.filterFormGroup.get('operator')?.value;
-  }
   @Input() properties: Property[] = [];
   @Input() operators: Operator[] = [];
   @Output() filterChange = new EventEmitter<any>();
@@ -82,14 +44,32 @@ export class FiltersComponent {
     operator: new FormControl(),
     value: new FormControl(),
   });
+
+  get propertyControl() {
+    return this.filterFormGroup.get('property');
+  }
+  get operatorControl() {
+    return this.filterFormGroup.get('operator');
+  }
+  get valueControl() {
+    return this.filterFormGroup.get('value');
+  }
+
+  get selectedProperty() {
+    return this.propertyControl?.value;
+  }
+  get selectedOperator() {
+    return this.operatorControl?.value;
+  }
+
   get filteredOperators(): Operator[] {
-    const selectedProperty = this.filterFormGroup.get('property')?.value;
-    if (!selectedProperty) {
+    const property = this.selectedProperty;
+    if (!property) {
       return [];
     }
     const validOps =
       PROPERTY_TYPE_OPERATORS[
-        selectedProperty.type as keyof typeof PROPERTY_TYPE_OPERATORS
+        property.type as keyof typeof PROPERTY_TYPE_OPERATORS
       ] || [];
     return this.operators.filter(op =>
       validOps.map(String).includes(String(op.id)),
@@ -97,25 +77,58 @@ export class FiltersComponent {
   }
 
   get valueOptions(): string[] {
-    const selectedProperty = this.filterFormGroup.get('property')?.value;
-    return selectedProperty?.values || [];
+    return this.selectedProperty?.values || [];
+  }
+
+  ngOnInit() {
+    this.propertyControl?.valueChanges.subscribe(() =>
+      this.updateValueValidators(),
+    );
+    this.operatorControl?.valueChanges.subscribe(() =>
+      this.updateValueValidators(),
+    );
+    this.valueControl?.valueChanges.subscribe(() => {
+      if (this.submitted) {
+        this.showValueError = false;
+        this.valueErrorMessage = '';
+      }
+    });
+  }
+
+  updateValueValidators() {
+    const property = this.selectedProperty;
+    const operator = this.selectedOperator;
+    if (!property || !operator) {
+      this.valueControl?.clearValidators();
+      this.valueControl?.updateValueAndValidity();
+      return;
+    }
+    if (property.type === 'number' && operator.id === this.OPERATOR_IDS.IN) {
+      this.valueControl?.setValidators(numberInOperatorValidator());
+    } else if (
+      property.type === 'enumerated' &&
+      operator.id === this.OPERATOR_IDS.IN
+    ) {
+      this.valueControl?.setValidators(enumeratedInOperatorValidator());
+    } else {
+      this.valueControl?.setValidators(requiredValueValidator(operator.id));
+    }
+    this.valueControl?.updateValueAndValidity();
   }
 
   filterProducts() {
     this.submitted = true;
     this.showValueError = false;
     this.valueErrorMessage = '';
-    const valueControl = this.filterFormGroup.get('value');
-    if (valueControl?.invalid) {
-      const errors = valueControl.errors || {};
+    if (this.valueControl?.invalid) {
+      const errors = this.valueControl.errors || {};
       this.showValueError = true;
-      this.valueErrorMessage = Object.values(errors)[0] as string;
+      this.valueErrorMessage = Object.values(errors)[0];
       return;
     }
-    // For number IN operator, parse value to array of numbers
-    const property = this.filterFormGroup.get('property')?.value;
-    const operator = this.filterFormGroup.get('operator')?.value;
-    let value = valueControl?.value;
+    const property = this.selectedProperty;
+    const operator = this.selectedOperator;
+    let value = this.valueControl?.value;
     if (
       property &&
       property.type === 'number' &&
@@ -127,14 +140,6 @@ export class FiltersComponent {
     this.filterChange.emit({
       ...this.filterFormGroup.value,
       value,
-    });
-  }
-  ngAfterViewInit() {
-    this.filterFormGroup.get('value')?.valueChanges.subscribe(() => {
-      if (this.submitted) {
-        this.showValueError = false;
-        this.valueErrorMessage = '';
-      }
     });
   }
 
