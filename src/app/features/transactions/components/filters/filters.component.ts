@@ -2,6 +2,7 @@ import { Component, EventEmitter, Output, Input } from '@angular/core';
 import { Property } from '../../interfaces/properties.interface';
 import { Operator } from '../../interfaces/filter.interface';
 import { OPERATOR_IDS } from '../../../../core/constants/operator.constants';
+import { PROPERTY_TYPE_OPERATORS } from '../../../../core/constants/operator.constants';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { MultiSelectModule } from 'primeng/multiselect';
@@ -63,6 +64,7 @@ export class FiltersComponent {
   }
   showValueError = false;
   valueErrorMessage = '';
+  private submitted = false;
   public OPERATOR_IDS = OPERATOR_IDS;
   get selectedProperty() {
     return this.filterFormGroup.get('property')?.value;
@@ -85,46 +87,13 @@ export class FiltersComponent {
     if (!selectedProperty) {
       return [];
     }
-    switch (selectedProperty.type) {
-      case 'string':
-        return this.operators.filter(op =>
-          (
-            [
-              OPERATOR_IDS.EQUALS,
-              OPERATOR_IDS.ANY,
-              OPERATOR_IDS.NONE,
-              OPERATOR_IDS.IN,
-              OPERATOR_IDS.CONTAINS,
-            ] as readonly string[]
-          ).includes(op.id),
-        );
-      case 'number':
-        return this.operators.filter(op =>
-          (
-            [
-              OPERATOR_IDS.EQUALS,
-              OPERATOR_IDS.GREATER_THAN,
-              OPERATOR_IDS.LESS_THAN,
-              OPERATOR_IDS.ANY,
-              OPERATOR_IDS.NONE,
-              OPERATOR_IDS.IN,
-            ] as readonly string[]
-          ).includes(op.id),
-        );
-      case 'enumerated':
-        return this.operators.filter(op =>
-          (
-            [
-              OPERATOR_IDS.EQUALS,
-              OPERATOR_IDS.ANY,
-              OPERATOR_IDS.NONE,
-              OPERATOR_IDS.IN,
-            ] as readonly string[]
-          ).includes(op.id),
-        );
-      default:
-        return [];
-    }
+    const validOps =
+      PROPERTY_TYPE_OPERATORS[
+        selectedProperty.type as keyof typeof PROPERTY_TYPE_OPERATORS
+      ] || [];
+    return this.operators.filter(op =>
+      validOps.map(String).includes(String(op.id)),
+    );
   }
 
   get valueOptions(): string[] {
@@ -133,6 +102,7 @@ export class FiltersComponent {
   }
 
   filterProducts() {
+    this.submitted = true;
     this.showValueError = false;
     this.valueErrorMessage = '';
     const valueControl = this.filterFormGroup.get('value');
@@ -157,6 +127,14 @@ export class FiltersComponent {
     this.filterChange.emit({
       ...this.filterFormGroup.value,
       value,
+    });
+  }
+  ngAfterViewInit() {
+    this.filterFormGroup.get('value')?.valueChanges.subscribe(() => {
+      if (this.submitted) {
+        this.showValueError = false;
+        this.valueErrorMessage = '';
+      }
     });
   }
 

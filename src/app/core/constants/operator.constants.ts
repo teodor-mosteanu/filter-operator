@@ -9,3 +9,27 @@ export const OPERATOR_IDS = {
 } as const;
 
 export type OperatorId = (typeof OPERATOR_IDS)[keyof typeof OPERATOR_IDS];
+
+export const PROPERTY_TYPE_OPERATORS = {
+  string: [
+    OPERATOR_IDS.EQUALS,
+    OPERATOR_IDS.ANY,
+    OPERATOR_IDS.NONE,
+    OPERATOR_IDS.IN,
+    OPERATOR_IDS.CONTAINS,
+  ],
+  number: [
+    OPERATOR_IDS.EQUALS,
+    OPERATOR_IDS.GREATER_THAN,
+    OPERATOR_IDS.LESS_THAN,
+    OPERATOR_IDS.ANY,
+    OPERATOR_IDS.NONE,
+    OPERATOR_IDS.IN,
+  ],
+  enumerated: [
+    OPERATOR_IDS.EQUALS,
+    OPERATOR_IDS.ANY,
+    OPERATOR_IDS.NONE,
+    OPERATOR_IDS.IN,
+  ],
+};

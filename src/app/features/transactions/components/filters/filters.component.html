@@ -75,23 +75,8 @@
           />
         </ng-container>
       </ng-container>
-      <div
-        *ngIf="
-          filterFormGroup.get('value')?.invalid &&
-          (filterFormGroup.get('value')?.dirty ||
-            filterFormGroup.get('value')?.touched)
-        "
-        class="value-error"
-      >
-        <ng-container *ngIf="filterFormGroup.get('value')?.errors as errors">
-          <span *ngIf="errors['numberIn']">{{ errors['numberIn'] }}</span>
-          <span *ngIf="errors['enumeratedIn']">{{
-            errors['enumeratedIn']
-          }}</span>
-          <span *ngIf="errors['requiredValue']">{{
-            errors['requiredValue']
-          }}</span>
-        </ng-container>
+      <div *ngIf="showValueError" class="value-error">
+        {{ valueErrorMessage }}
       </div>
     </ng-container>
     <ng-template #valuePlaceholder>
