@@ -11,8 +11,18 @@ import { FiltersComponent } from '../../components/filters/filters.component';
 import { TableComponent } from '../../components/table/table.component';
 import { DatastoreService } from '../../services/products.service';
 import { PlaceholderComponent } from '../../components/placeholder/placeholder.component';
-import { catchError, Observable, of } from 'rxjs';
+import { catchError, of } from 'rxjs';
 import { forkJoin } from 'rxjs';
+import { LoggerService } from '../../../../core/services/logger.service';
+import {
+  matchEquals,
+  matchGreaterThan,
+  matchLessThan,
+  matchAny,
+  matchNone,
+  matchIn,
+  matchContains,
+} from '../../utils/filter-matchers';
 
 @Component({
   selector: 'app-products-view',
@@ -34,8 +44,12 @@ export class ProductsViewComponent {
   operators: Operator[] = OPERATORS;
   loading = false;
   placeholderContent = PLACEHOLDER_CONTENT.NO_PRODUCTS;
+  showError = false;
 
-  constructor(private productsService: DatastoreService) {
+  constructor(
+    private productsService: DatastoreService,
+    private loggerService: LoggerService,
+  ) {
     this.loadData();
   }
 
@@ -44,19 +58,33 @@ export class ProductsViewComponent {
     forkJoin({
       products: this.productsService
         .getProducts()
-        .pipe(catchError(() => this.handleError())),
+        .pipe(catchError(() => of(null))),
       properties: this.productsService
         .getProperties()
-        .pipe(catchError(() => this.handleError())),
+        .pipe(catchError(() => of(null))),
     }).subscribe(({ products, properties }) => {
-      this.allProducts = products || [];
+      const hasError = !products || !properties;
+      if (hasError) {
+        this.handleLoadError();
+        return;
+      }
+      this.showError = false;
+      this.allProducts = products;
       this.products = [...this.allProducts];
-      this.properties = properties || [];
+      this.properties = properties;
       this.setLoadingState(false);
       if (this.products.length === 0) {
         this.setPlaceholderContent(PLACEHOLDER_CONTENT.NO_PRODUCTS);
       }
     });
+  }
+
+  private handleLoadError(): void {
+    //logging would be normally handled in the error interceptor
+    this.loggerService.log('Error loading products or properties');
+    this.setLoadingState(false);
+    this.setPlaceholderContent(PLACEHOLDER_CONTENT.ERROR);
+    this.showError = true;
   }
 
   setLoadingState(isLoading: boolean): void {
@@ -76,7 +104,9 @@ export class ProductsViewComponent {
     value: any;
   }): void {
     if (!filter.property || !filter.operator) {
+      //
       this.products = [...this.allProducts];
+      this.setPlaceholderContent(PLACEHOLDER_CONTENT.NO_PRODUCTS);
       return;
     }
     this.products = this.allProducts.filter(product => {
@@ -85,48 +115,29 @@ export class ProductsViewComponent {
       )?.value;
       switch (filter.operator.id) {
         case OPERATOR_IDS.EQUALS:
-          return propValue == filter.value;
+          return matchEquals(propValue, filter.value);
         case OPERATOR_IDS.GREATER_THAN:
-          return typeof propValue === 'number' && propValue > filter.value;
+          return matchGreaterThan(propValue, filter.value);
         case OPERATOR_IDS.LESS_THAN:
-          return typeof propValue === 'number' && propValue < filter.value;
+          return matchLessThan(propValue, filter.value);
         case OPERATOR_IDS.ANY:
-          return (
-            propValue !== undefined && propValue !== null && propValue !== ''
-          );
+          return matchAny(propValue);
         case OPERATOR_IDS.NONE:
-          return (
-            propValue === undefined || propValue === null || propValue === ''
-          );
+          return matchNone(propValue);
         case OPERATOR_IDS.IN:
-          if (Array.isArray(filter.value)) {
-            return filter.value.includes(propValue);
-          }
-          return (
-            typeof filter.value === 'string' &&
-            filter.value
-              .split(',')
-              .map(v => v.trim())
-              .includes(String(propValue))
-          );
+          return matchIn(propValue, filter.value, filter.property.type);
         case OPERATOR_IDS.CONTAINS:
-          return (
-            typeof propValue === 'string' &&
-            propValue.toLowerCase().includes(String(filter.value).toLowerCase())
-          );
+          return matchContains(propValue, filter.value);
         default:
           return true;
       }
     });
+    if (this.products.length === 0) {
+      this.setPlaceholderContent(PLACEHOLDER_CONTENT.NO_PRODUCTS);
+    }
   }
 
   clearFilter(): void {
     this.products = [...this.allProducts];
-  }
-
-  private handleError(): Observable<null> {
-    this.setLoadingState(false);
-    this.setPlaceholderContent(PLACEHOLDER_CONTENT.ERROR);
-    return of(null);
   }
 }

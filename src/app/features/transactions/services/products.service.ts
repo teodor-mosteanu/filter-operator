@@ -18,6 +18,12 @@ export class DatastoreService {
 
   getProperties(): Observable<Property[]> {
     // Simulate backend call with a delay
-    return of(datastore.properties).pipe(delay(5000));
+    return of(datastore.properties).pipe(delay(2000));
+    // Simulate backend error after a delay
+    // return new Observable<Property[]>(observer => {
+    //   setTimeout(() => {
+    //     observer.error(new Error('Simulated properties error'));
+    //   }, 2000);
+    // });
   }
 }
