@@ -21,67 +21,69 @@
           : [{ id: '', text: 'Please select a property to begin' }]
       "
       optionLabel="text"
-      [disabled]="filteredOperators.length === 0"
       placeholder="Select Operator"
       [showClear]="true"
     ></p-dropdown>
   </div>
   <div class="filter-section filter-value">
-    <ng-container
-      *ngIf="
-        selectedProperty &&
-          selectedOperator &&
-          selectedOperator.id !== OPERATOR_IDS.ANY &&
-          selectedOperator.id !== OPERATOR_IDS.NONE;
-        else valuePlaceholder
-      "
-    >
-      <ng-container [ngSwitch]="selectedProperty.type">
-        <ng-container *ngSwitchCase="'enumerated'">
-          <p-dropdown
-            *ngIf="selectedOperator.id !== OPERATOR_IDS.IN"
-            formControlName="value"
-            [options]="valueOptions"
-            placeholder="Select Value"
-            [showClear]="true"
-          ></p-dropdown>
-          <p-multiSelect
-            *ngIf="selectedOperator.id === OPERATOR_IDS.IN"
-            formControlName="value"
-            [options]="valueOptions"
-            optionLabel=""
-            placeholder="Select one or more values"
-            display="chip"
-          ></p-multiSelect>
-        </ng-container>
-        <input
-          *ngSwitchCase="'string'"
-          type="text"
-          formControlName="value"
-          placeholder="Enter value"
-        />
-        <ng-container *ngSwitchCase="'number'">
+    @if (
+      selectedProperty &&
+      selectedOperator &&
+      selectedOperator.id !== OPERATOR_IDS.ANY &&
+      selectedOperator.id !== OPERATOR_IDS.NONE
+    ) {
+      @switch (selectedProperty.type) {
+        @case ('enumerated') {
+          @if (selectedOperator.id !== OPERATOR_IDS.IN) {
+            <p-dropdown
+              formControlName="value"
+              [options]="valueOptions"
+              placeholder="Select Value"
+              [showClear]="true"
+            ></p-dropdown>
+          }
+          @if (selectedOperator.id === OPERATOR_IDS.IN) {
+            <p-multiSelect
+              formControlName="value"
+              [options]="valueOptions"
+              optionLabel=""
+              placeholder="Select one or more values"
+              display="chip"
+            ></p-multiSelect>
+          }
+        }
+        @case ('string') {
           <input
-            *ngIf="selectedOperator.id === OPERATOR_IDS.IN"
             type="text"
-            formControlName="value"
-            placeholder="Enter numbers separated by comma"
-          />
-          <input
-            *ngIf="selectedOperator.id !== OPERATOR_IDS.IN"
-            type="number"
             formControlName="value"
             placeholder="Enter value"
           />
-        </ng-container>
-      </ng-container>
-      <div *ngIf="showValueError" class="value-error">
-        {{ valueErrorMessage }}
-      </div>
-    </ng-container>
-    <ng-template #valuePlaceholder>
+        }
+        @case ('number') {
+          @if (selectedOperator.id === OPERATOR_IDS.IN) {
+            <input
+              type="text"
+              formControlName="value"
+              placeholder="Enter numbers separated by comma"
+            />
+          }
+          @if (selectedOperator.id !== OPERATOR_IDS.IN) {
+            <input
+              type="number"
+              formControlName="value"
+              placeholder="Enter value"
+            />
+          }
+        }
+      }
+      @if (showValueError) {
+        <div class="value-error">
+          {{ valueErrorMessage }}
+        </div>
+      }
+    } @else {
       <p class="value-placeholder">Please select a property and operator</p>
-    </ng-template>
+    }
   </div>
   <div class="filter-section filter-submit">
     <p-button label="Apply" type="submit"></p-button>
