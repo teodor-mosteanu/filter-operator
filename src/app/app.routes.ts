@@ -4,6 +4,11 @@ import { appTitle } from './core/constants/app.constants';
 
 export const routes: Routes = [
   {
+    path: '',
+    redirectTo: '**',
+    pathMatch: 'full',
+  },
+  {
     path: '**',
     component: ProductsViewComponent,
     title: appTitle,
