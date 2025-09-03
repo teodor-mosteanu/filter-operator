@@ -6,7 +6,7 @@ This project is a solution to the Salsify coding exercise for building a product
 
 This project was started from a solution I developed previously. Please see git commit history for detailed changes. Further code cleanup could have been done but it was not prioritized due to time constraints. Also some components and mechanisms were left as a demo of what could be done in future iterations. I have left comments where applicable.
 
-Further reading was generated using AI:
+Further reading was generated using AI to format and re-organize the content:
 
 ## Features & Spec Compliance
 
@@ -32,6 +32,7 @@ Further reading was generated using AI:
   - Only one value per product property.
   - Operator set is static and defined in constants.
   - Product and property data are loaded from a mock datastore.
+  - This app was prepared with a future of extensibility in mind. It is also designed to be easily adaptable for new features and requirements.
 - **Design Choices:**
   - Used Angular's new template syntax (`@if`, `@switch`) for cleaner templates.
   - Modular design principles were applied throughout the codebase. For example:
