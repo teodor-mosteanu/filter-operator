@@ -1,6 +1,9 @@
 import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
 import { OPERATOR_IDS } from '../../../core/constants/operator.constants';
 
+/**
+ * Validator for comma-separated number input. Returns error if input is not valid numbers.
+ */
 export function numberInOperatorValidator(): ValidatorFn {
   return (control: AbstractControl): ValidationErrors | null => {
     const value = control.value;
@@ -20,6 +23,9 @@ export function numberInOperatorValidator(): ValidatorFn {
   };
 }
 
+/**
+ * Validator for enumerated multi-select input. Returns error if no values are selected.
+ */
 export function enumeratedInOperatorValidator(): ValidatorFn {
   return (control: AbstractControl): ValidationErrors | null => {
     const value = control.value;
@@ -30,6 +36,9 @@ export function enumeratedInOperatorValidator(): ValidatorFn {
   };
 }
 
+/**
+ * Validator for required value input, except for ANY and NONE operators.
+ */
 export function requiredValueValidator(operatorId: string): ValidatorFn {
   return (control: AbstractControl): ValidationErrors | null => {
     const value = control.value;

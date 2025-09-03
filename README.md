@@ -59,6 +59,8 @@ This project is a solution to the Salsify coding exercise for building a product
 - Enhance UI with more advanced feedback (e.g., loading spinners, tooltips and validation handling).
 - Support for additional filter types or multi-filter scenarios.
 - Further break into UI Components - e.g., separate components for filter controls, product list, and error messages.
+- Add query parameters to the products view route so that the current filter state (property, operator, value) is reflected in the URL. This enables users to share or bookmark filtered views directly.
+- Table would support pagination
 
 ---
 

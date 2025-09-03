@@ -10,6 +10,7 @@ export const OPERATOR_IDS = {
 
 export type OperatorId = (typeof OPERATOR_IDS)[keyof typeof OPERATOR_IDS];
 
+/* These are the possible operators for each property type [TM 02/09/25] */
 export const PROPERTY_TYPE_OPERATORS = {
   string: [
     OPERATOR_IDS.EQUALS,

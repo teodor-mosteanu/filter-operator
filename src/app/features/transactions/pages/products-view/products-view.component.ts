@@ -99,14 +99,8 @@ export class ProductsViewComponent {
   }
 
   /**
-   * Updates the displayed products based on the selected filter.
-   *
-   * @param filter - The filter object containing property, operator, and value.
-   *
-   * If no property or operator is selected, resets the product list to all products.
-   * Otherwise, filters products by matching the selected property value against the filter value
-   * using the chosen operator (equals, greater than, less than, any, none, in, contains).
-   * Updates the placeholder message if no products match the filter.
+   * Applies the current filter to the products list and updates the displayed products.
+   * Emits a placeholder message if no products match.
    */
   onFilterChange(filter: {
     property: Property;
@@ -127,9 +121,8 @@ export class ProductsViewComponent {
   }
 
   /**
-   * Determines if a product matches the given filter.
-   * @param product - The product to check.
-   * @param filter - The filter criteria.
+   * Checks if a product matches the given filter criteria.
+   * Returns true if the product should be included in the filtered list.
    */
   private matchesFilter(
     product: Product,

@@ -95,6 +95,9 @@ export class FiltersComponent {
     });
   }
 
+  /**
+   * Dynamically sets validators for the value control based on selected property and operator.
+   */
   updateValueValidators() {
     const property = this.selectedProperty;
     const operator = this.selectedOperator;
@@ -116,6 +119,9 @@ export class FiltersComponent {
     this.valueControl?.updateValueAndValidity();
   }
 
+  /**
+   * Handles filter form submission, displays validation errors, and emits filter changes.
+   */
   filterProducts() {
     this.submitted = true;
     this.showValueError = false;
