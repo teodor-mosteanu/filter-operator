@@ -21,7 +21,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: ./dist/filter-operator/browser
+          path: ./dist/salsify-tech-test/browser
 
   deploy:
     environment:
