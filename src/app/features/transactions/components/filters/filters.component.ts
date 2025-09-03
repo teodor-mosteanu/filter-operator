@@ -1,8 +1,8 @@
 import { Component, EventEmitter, Output, Input } from '@angular/core';
 import { Property } from '../../interfaces/properties.interface';
 import { Operator } from '../../interfaces/filter.interface';
-import { OPERATOR_IDS } from '../../../../core/constants/operator.constants';
-import { PROPERTY_TYPE_OPERATORS } from '../../../../core/constants/operator.constants';
+import { OPERATOR_IDS } from '../../constants/operator.constants';
+import { PROPERTY_TYPE_OPERATORS } from '../../constants/operator.constants';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { MultiSelectModule } from 'primeng/multiselect';

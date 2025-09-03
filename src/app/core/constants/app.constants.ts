@@ -10,17 +10,8 @@ export const apiPassword = 'userPass';
 export const transationApiUrl = 'http://localhost:8080/api/v1/payments';
 //the previous constants are used for API authentication and endpoints and are only for example purposes
 
-/* default page size [TM 21/03/24] */
+/* default page size - for pagination [TM 21/03/24] */
 export const defaultPageSize = 5;
-
-/* Default payment statuses [TM 21/03/24] */
-export enum PaymentStatus {
-  CAPTURED = 'CAPTURED',
-  COMPLETED = 'COMPLETED',
-  CREATED = 'CREATED',
-  FAILED = 'FAILED',
-  SETTLED = 'SETTLED',
-}
 
 /* placeholder messages [TM 28/03/24] */
 export const PLACEHOLDER_CONTENT = {

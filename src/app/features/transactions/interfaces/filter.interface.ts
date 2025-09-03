@@ -1,4 +1,4 @@
-import { OperatorId } from '../../../core/constants/operator.constants';
+import { OperatorId } from '../constants/operator.constants';
 
 export interface Operator {
   text: string;

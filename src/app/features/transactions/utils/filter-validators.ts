@@ -1,5 +1,5 @@
 import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
-import { OPERATOR_IDS } from '../../../core/constants/operator.constants';
+import { OPERATOR_IDS } from '../constants/operator.constants';
 
 /**
  * Validator for comma-separated number input. Returns error if input is not valid numbers.

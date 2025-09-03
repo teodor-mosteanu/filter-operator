@@ -4,6 +4,10 @@
 
 This project is a solution to the Salsify coding exercise for building a product filtering condition editor. The app allows users to create a single filter by selecting a property, an operator, and a value, and instantly updates the product list based on the filter. The UI is designed for clarity, robustness, and maintainability, using Angular standalone components and PrimeNG for UI elements.
 
+This project was started from a solution I developed previously. Please see git commit history for detailed changes. Further code cleanup could have been done but it was not prioritized due to time constraints. Also some components and mechanisms were left as a demo of what could be done in future iterations. I have left comments where applicable.
+
+Further reading was generated using AI:
+
 ## Features & Spec Compliance
 
 - **Single Filter UI:** Users can select a property, operator, and value to filter products.
@@ -34,7 +38,8 @@ This project is a solution to the Salsify coding exercise for building a product
     - Operator lists and IDs are centralized in `src/app/core/constants/app.constants.ts` for easy maintenance and reuse.
     - Filtering logic and custom validators are separated into dedicated files (`filter-angular-validators.ts`, filter matcher functions) for clarity and testability.
     - UI components (e.g., filter, table, header, footer) are implemented as standalone Angular components, promoting reusability and separation of concerns.
-    - Services (e.g., `transactions.service.ts`, `logger.service.ts`) encapsulate business logic and data access, keeping components focused on presentation and interaction.
+    - Services (e.g. `logger.service.ts`) encapsulate business logic and data access, keeping components focused on presentation and interaction.
+    - Interceptors handle cross-cutting concerns like authentication and logging.
     - Shared styles and mixins are organized in `src/styles/` for consistent theming and easy updates.
 - **Testing:**
   - Manual testing was performed for all filter scenarios, error states, and UI flows.
@@ -53,7 +58,7 @@ This project is a solution to the Salsify coding exercise for building a product
 - Click "Apply" to filter; click "Clear Filter" to reset.
 - Error messages are shown only after submit, and disappear when typing.
 
-## Further Improvements
+## Further Feature Improvements to be added
 
 - Add automated unit tests for filter logic and validators.
 - Enhance UI with more advanced feedback (e.g., loading spinners, tooltips and validation handling).
