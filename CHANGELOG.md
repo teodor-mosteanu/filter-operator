@@ -1,3 +1,10 @@
+## [1.0.1](https://github.com/teodor-mosteanu/filter-operator/compare/v1.0.0...v1.0.1) (2025-09-03)
+
+
+### Bug Fixes
+
+* **header:** update logo image path for correct loading ([5d1906b](https://github.com/teodor-mosteanu/filter-operator/commit/5d1906b5f4656305b807f12b4cbe6026d03589b6))
+
 # 1.0.0 (2025-09-03)
 
 
