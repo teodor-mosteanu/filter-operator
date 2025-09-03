@@ -1,3 +1,10 @@
+## [1.0.2](https://github.com/teodor-mosteanu/filter-operator/compare/v1.0.1...v1.0.2) (2025-09-03)
+
+
+### Bug Fixes
+
+* **routes:** correct redirect path for root route in app routing ([5662946](https://github.com/teodor-mosteanu/filter-operator/commit/56629461ccf03e0034955c2df04dd93ea6c3c96d))
+
 ## [1.0.1](https://github.com/teodor-mosteanu/filter-operator/compare/v1.0.0...v1.0.1) (2025-09-03)
 
 
