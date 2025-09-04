@@ -7,9 +7,10 @@
   "useTabs": false,
   "bracketSpacing": true,
   "arrowParens": "avoid",
-  "endOfLine": "auto",
+  "endOfLine": "lf",
   "jsxSingleQuote": false,
   "jsxBracketSameLine": false,
   "requirePragma": false,
-  "insertPragma": false
+  "insertPragma": false,
+  "trimTrailingWhitespace": true
 }
