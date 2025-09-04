@@ -33,6 +33,7 @@ Further reading was generated using AI to format and re-organize the content:
   - Operator set is static and defined in constants.
   - Product and property data are loaded from a mock datastore.
   - This app was prepared with a future of extensibility in mind. It is also designed to be easily adaptable for new features and requirements.
+  - Values will come from the BE as string/numbers even if they are boolean
 - **Design Choices:**
   - Used Angular's new template syntax (`@if`, `@switch`) for cleaner templates.
   - Modular design principles were applied throughout the codebase. For example:

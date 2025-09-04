@@ -6,7 +6,7 @@ import { OPERATOR_IDS } from '../../constants/operator.constants';
 import { OPERATORS } from '../../constants/operator.constants';
 import { Product } from '../../interfaces/products.interface';
 import { Property } from '../../interfaces/properties.interface';
-import { Operator } from '../../interfaces/filter.interface';
+import { Operator } from '../../interfaces/operator.interface';
 import { FiltersComponent } from '../../components/filters/filters.component';
 import { TableComponent } from '../../components/table/table.component';
 import { DatastoreService } from '../../services/products.service';
@@ -24,6 +24,8 @@ import {
   matchContains,
 } from '../../utils/filter-matchers';
 
+import { ViewStatus } from '../../../../core/interfaces/view-status.enum';
+
 @Component({
   selector: 'app-products-view',
   standalone: true,
@@ -38,13 +40,13 @@ import {
   styleUrl: './products-view.component.scss',
 })
 export class ProductsViewComponent {
+  ViewStatus = ViewStatus;
   allProducts: Product[] = [];
   products: Product[] = [];
   properties: Property[] = [];
   operators: Operator[] = OPERATORS;
-  loading = false;
-  placeholderContent = PLACEHOLDER_CONTENT.NO_PRODUCTS;
-  showError = false;
+  status: ViewStatus = ViewStatus.Loading;
+  placeholderContent = PLACEHOLDER_CONTENT.LOADING;
 
   constructor(
     private productsService: DatastoreService,
@@ -54,7 +56,8 @@ export class ProductsViewComponent {
   }
 
   loadData(): void {
-    this.setLoadingState(true);
+    this.status = ViewStatus.Loading;
+    this.placeholderContent = PLACEHOLDER_CONTENT.LOADING;
     forkJoin({
       products: this.productsService
         .getProducts()
@@ -65,38 +68,19 @@ export class ProductsViewComponent {
     }).subscribe(({ products, properties }) => {
       const hasError = !products || !properties;
       if (hasError) {
-        this.handleLoadError();
+        this.loggerService.log('Error loading products or properties');
+        this.status = ViewStatus.Error;
+        this.placeholderContent = PLACEHOLDER_CONTENT.ERROR;
         return;
       }
-      this.showError = false;
+      this.status = ViewStatus.Ready;
       this.allProducts = products;
       this.products = [...this.allProducts];
       this.properties = properties;
-      this.setLoadingState(false);
-      if (this.products.length === 0) {
-        this.setPlaceholderContent(PLACEHOLDER_CONTENT.NO_PRODUCTS);
-      }
     });
   }
 
-  private handleLoadError(): void {
-    //logging would be normally handled in the error interceptor
-    this.loggerService.log('Error loading products or properties');
-    this.setLoadingState(false);
-    this.setPlaceholderContent(PLACEHOLDER_CONTENT.ERROR);
-    this.showError = true;
-  }
-
-  setLoadingState(isLoading: boolean): void {
-    this.loading = isLoading;
-    this.setPlaceholderContent(PLACEHOLDER_CONTENT.LOADING);
-  }
-
-  setPlaceholderContent(
-    content: (typeof PLACEHOLDER_CONTENT)[keyof typeof PLACEHOLDER_CONTENT],
-  ): void {
-    this.placeholderContent = content;
-  }
+  // Removed handleLoadError and setLoadingState/setPlaceholderContent methods
 
   /**
    * Applies the current filter to the products list and updates the displayed products.
@@ -109,15 +93,12 @@ export class ProductsViewComponent {
   }): void {
     if (!filter.property || !filter.operator) {
       this.products = [...this.allProducts];
-      this.setPlaceholderContent(PLACEHOLDER_CONTENT.NO_PRODUCTS);
+      this.placeholderContent = PLACEHOLDER_CONTENT.NO_PRODUCTS;
       return;
     }
     this.products = this.allProducts.filter(product =>
       this.matchesFilter(product, filter),
     );
-    if (this.products.length === 0) {
-      this.setPlaceholderContent(PLACEHOLDER_CONTENT.NO_PRODUCTS);
-    }
   }
 
   /**
@@ -149,9 +130,5 @@ export class ProductsViewComponent {
       default:
         return true;
     }
-  }
-
-  clearFilter(): void {
-    this.products = [...this.allProducts];
   }
 }

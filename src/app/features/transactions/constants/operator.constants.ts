@@ -1,4 +1,4 @@
-import { Operator } from '../interfaces/filter.interface';
+import { Operator } from '../interfaces/operator.interface';
 
 export const OPERATOR_IDS = {
   EQUALS: 'equals',

@@ -1,25 +1,29 @@
-<p-table
-  ariaLabel="Products Table"
-  [value]="products"
-  [tableStyle]="{ 'min-width': '75rem' }"
-  styleClass="p-datatable-striped"
->
-  <ng-template pTemplate="header">
-    <tr>
-      <th>ID</th>
-      <ng-container *ngFor="let property of properties">
-        <th>{{ property.name }}</th>
-      </ng-container>
-    </tr>
-  </ng-template>
-  <ng-template pTemplate="body" let-product>
-    <tr>
-      <td>{{ product.id }}</td>
-      <ng-container *ngFor="let property of properties">
-        <td>
-          {{ getPropertyValue(product, property.id) }}
-        </td>
-      </ng-container>
-    </tr>
-  </ng-template>
-</p-table>
+@if (products.length) {
+  <p-table
+    ariaLabel="Products Table"
+    [value]="products"
+    [tableStyle]="{ 'min-width': '75rem' }"
+    styleClass="p-datatable-striped"
+  >
+    <ng-template pTemplate="header">
+      <tr>
+        <th>ID</th>
+        <ng-container *ngFor="let property of properties">
+          <th>{{ property.name }}</th>
+        </ng-container>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-product>
+      <tr>
+        <td>{{ product.id }}</td>
+        <ng-container *ngFor="let property of properties">
+          <td>
+            {{ getPropertyValue(product, property.id) }}
+          </td>
+        </ng-container>
+      </tr>
+    </ng-template>
+  </p-table>
+} @else {
+  <app-placeholder [placeholderContent]="placeholderContent" />
+}

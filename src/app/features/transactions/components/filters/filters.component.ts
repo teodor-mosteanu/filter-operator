@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Output, Input } from '@angular/core';
 import { Property } from '../../interfaces/properties.interface';
-import { Operator } from '../../interfaces/filter.interface';
+import { Operator } from '../../interfaces/operator.interface';
 import { OPERATOR_IDS } from '../../constants/operator.constants';
 import { PROPERTY_TYPE_OPERATORS } from '../../constants/operator.constants';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';

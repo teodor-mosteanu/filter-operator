@@ -1,5 +1,5 @@
 <div class="products-wrapper">
-  @if (showError || loading) {
+  @if (status !== ViewStatus.Ready) {
     <app-placeholder [placeholderContent]="placeholderContent" />
   } @else {
     <app-filters
@@ -7,10 +7,6 @@
       [operators]="operators"
       (filterChange)="onFilterChange($event)"
     ></app-filters>
-    @if (products.length) {
-      <app-table [products]="products" [properties]="properties"></app-table>
-    } @else {
-      <app-placeholder [placeholderContent]="placeholderContent" />
-    }
+    <app-table [products]="products" [properties]="properties"></app-table>
   }
 </div>
