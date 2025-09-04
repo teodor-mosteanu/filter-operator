@@ -105,7 +105,19 @@ export class ProductsViewComponent {
   /**
    * Checks if a product matches the given filter criteria.
    * Returns true if the product should be included in the filtered list.
+   *
+   *  * Filtering Flow:
+   * - The user selects a filter (property, operator, value) via FiltersComponent.
+   * - onFilterChange() applies the filter to allProducts, updating the displayed products.
+   * - matchesFilter() checks each product against the filter using operator-specific match functions.
+   *
+   * Extending Filtering:
+   * - To add a new operator:
+   *   1. Define its ID in OPERATOR_IDS and add it to OPERATORS.
+   *   2. Implement a corresponding match function (e.g., matchStartsWith) and potentially a validation function.
+   *   3. Add a case for the new operator in matchesFilter().
    */
+
   private matchesFilter(
     product: Product,
     filter: { property: Property; operator: Operator; value: any },

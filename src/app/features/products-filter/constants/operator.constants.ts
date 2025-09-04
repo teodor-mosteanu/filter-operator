@@ -1,3 +1,14 @@
+/**
+ * Operator/Property Mapping (operator.constants.ts)
+ * - `OPERATORS`: List of operator objects with display text and ID, used for UI rendering.
+ *
+ * Extending the mapping:
+ * 1. Add new operator to `OPERATOR_IDS` and `OPERATORS`.
+ * 2. Update `PROPERTY_TYPE_OPERATORS` to include the new operator for relevant property types.
+ * 3. Ensure any new property types are mapped to their valid operators.
+ *
+ * This structure helps maintain consistency and prevents invalid filter configurations. [TM 04/09/25]
+ */
 import { Operator } from '../interfaces/operator.interface';
 
 export const OPERATOR_IDS = {
@@ -13,6 +24,7 @@ export const OPERATOR_IDS = {
 export type OperatorId = (typeof OPERATOR_IDS)[keyof typeof OPERATOR_IDS];
 
 /* These are the possible operators for each property type [TM 02/09/25] */
+
 export const PROPERTY_TYPE_OPERATORS = {
   string: [
     OPERATOR_IDS.EQUALS,
