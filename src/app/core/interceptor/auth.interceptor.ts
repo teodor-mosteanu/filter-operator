@@ -2,7 +2,7 @@ import { HttpInterceptorFn } from '@angular/common/http';
 import {
   apiPassword,
   apiUsername,
-  transationApiUrl,
+  transactionApiUrl,
 } from '../constants/app.constants';
 
 /*
@@ -13,7 +13,7 @@ import {
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const authToken = 'Basic ' + btoa(apiUsername + ':' + apiPassword);
 
-  if (req.method === 'GET' && req.url === transationApiUrl) {
+  if (req.method === 'GET' && req.url === transactionApiUrl) {
     const authReq = req.clone({
       headers: req.headers.set('Authorization', authToken),
     });

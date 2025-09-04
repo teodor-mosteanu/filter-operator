@@ -1,3 +1,5 @@
+/* TODO: Add type safety for propValue and filterValue [TM 04/09/25] */
+
 export function matchEquals(propValue: any, filterValue: any): boolean {
   return propValue == filterValue;
 }

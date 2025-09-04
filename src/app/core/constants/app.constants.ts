@@ -7,7 +7,7 @@ export const apiUsername = 'user';
 export const apiPassword = 'userPass';
 
 /* Get transactions URL [TM 20/03/24] */
-export const transationApiUrl = 'http://localhost:8080/api/v1/payments';
+export const transactionApiUrl = 'http://localhost:8080/api/v1/payments';
 //the previous constants are used for API authentication and endpoints and are only for example purposes
 
 /* default page size - for pagination [TM 21/03/24] */

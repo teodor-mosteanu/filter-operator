@@ -11,7 +11,7 @@ import { of } from 'rxjs';
 import {
   apiPassword,
   apiUsername,
-  transationApiUrl,
+  transactionApiUrl,
 } from '../constants/app.constants';
 
 describe('authInterceptor', () => {
@@ -43,7 +43,7 @@ describe('authInterceptor', () => {
 
   describe('when the request is a GET request to the transactions API', () => {
     beforeEach(() => {
-      mockRequest = new HttpRequest('GET', transationApiUrl);
+      mockRequest = new HttpRequest('GET', transactionApiUrl);
     });
     it('should add Authorization header to the request', () => {
       const spy = spyOn(mockRequest.headers, 'set').and.callThrough();

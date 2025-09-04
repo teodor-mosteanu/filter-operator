@@ -25,6 +25,7 @@ Further reading was generated using AI to format and re-organize the content:
 - **Reactive Forms & Validators:** Angular form validators (including custom ones)
 - **Filtering Logic:** Modular filter matchers and validators for clarity and testability.
 - **Error State Management:** Errors are only shown after submit, and are cleared when the user starts typing.
+- **Unit tests** Unit tests for Product View only due to time constraints (manual testing for UI flows). This file was chosen because it contains the main filtering logic.
 
 ## Development Notes
 
@@ -68,8 +69,9 @@ Further reading was generated using AI to format and re-organize the content:
 - Further break into UI Components - e.g., separate components for filter controls, product list, and error messages.
 - Add query parameters to the products view route so that the current filter state (property, operator, value) is reflected in the URL. This enables users to share or bookmark filtered views directly.
 - Table would support pagination
+- Further type safety features such as using TypeScript interfaces and enums more extensively. For propValue in the filters - see TODO comment in filter-matchers.ts
 
 ---
 
 **Author:** Teodor Mosteanu
-**Time Spent:** 6 hours
+**Time Spent:** 7 hours
