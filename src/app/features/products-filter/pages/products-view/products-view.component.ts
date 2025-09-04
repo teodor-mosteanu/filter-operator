@@ -10,7 +10,7 @@ import { Operator } from '../../interfaces/operator.interface';
 import { FiltersComponent } from '../../components/filters/filters.component';
 import { TableComponent } from '../../components/table/table.component';
 import { DatastoreService } from '../../services/products.service';
-import { PlaceholderComponent } from '../../components/placeholder/placeholder.component';
+
 import { catchError, of } from 'rxjs';
 import { forkJoin } from 'rxjs';
 import { LoggerService } from '../../../../core/services/logger.service';
@@ -25,6 +25,7 @@ import {
 } from '../../utils/filter-matchers';
 
 import { ViewStatus } from '../../../../core/interfaces/view-status.enum';
+import { PlaceholderComponent } from '../../../../shared/components/placeholder/placeholder.component';
 
 @Component({
   selector: 'app-products-view',

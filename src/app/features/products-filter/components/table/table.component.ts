@@ -4,7 +4,7 @@ import { TableModule } from 'primeng/table';
 import { Product } from '../../interfaces/products.interface';
 import { CommonModule } from '@angular/common';
 import { PLACEHOLDER_CONTENT } from '../../../../core/constants/app.constants';
-import { PlaceholderComponent } from '../placeholder/placeholder.component';
+import { PlaceholderComponent } from '../../../../shared/components/placeholder/placeholder.component';
 
 @Component({
   selector: 'app-table',
