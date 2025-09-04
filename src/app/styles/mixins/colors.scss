@@ -1,5 +1,5 @@
-@import "../company-colors.scss";
-
+@import '../company-colors.scss';
+/* This was left as an example of how a color mixin would work [TM 04/09/25] */
 @mixin transactionStatusColors {
   &.captured {
     color: blue;
