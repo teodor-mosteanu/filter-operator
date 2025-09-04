@@ -25,8 +25,8 @@ Further reading was generated using AI to format and re-organize the content:
 
 ## Technical Approach
 
-- **Angular Standalone Components:** Modular, maintainable code structure.
-- **PrimeNG UI:** Dropdowns, tables, and buttons for a professional look.
+- **Angular Standalone Components:** Modular, maintainable code structure. Angular was chosen due to familiarity and similarity to Ember.js and being a recognised framework for building SPAs.
+- **PrimeNG UI:** Dropdowns, tables, and buttons for a professional look and enhancing developer productivity.
 - **Centralized Constants:** Operator IDs and valid operator lists are managed in a shared constants file for maintainability.
 - **Reactive Forms & Validators:** Angular form validators (including custom ones)
 - **Filtering Logic:** Modular filter matchers and validators for clarity and testability.
